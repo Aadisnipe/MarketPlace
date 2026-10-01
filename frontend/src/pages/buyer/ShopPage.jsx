@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import StoreHeader from '../../components/StoreHeader';
+import ProductImage from '../../components/ProductImage';
 import api from '../../services/api';
 
 const initialFilters = { search: '', category: '', brand: '', minPrice: '', maxPrice: '', minRating: '', inStock: false, sort: 'newest' };
@@ -30,6 +31,25 @@ export default function ShopPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [retryKey, setRetryKey] = useState(0);
+
+  // The department links and header search can change the URL without
+  // remounting this route. Keep the visible controls and request in sync.
+  useEffect(() => {
+    const nextFilters = {
+      ...initialFilters,
+      search: urlParams.get('search') || '',
+      category: urlParams.get('category') || '',
+      brand: urlParams.get('brand') || '',
+      minPrice: urlParams.get('minPrice') || '',
+      maxPrice: urlParams.get('maxPrice') || '',
+      minRating: urlParams.get('minRating') || '',
+      inStock: urlParams.get('inStock') === 'true',
+      sort: urlParams.get('sort') || 'newest',
+    };
+    setFilters(nextFilters);
+    setSubmittedSearch(nextFilters.search);
+    setPage(1);
+  }, [urlParams]);
 
   useEffect(() => {
     api.get('/categories').then(({ data }) => setCategories(data.data.categories)).catch(() => setCategories([]));
@@ -123,7 +143,7 @@ export default function ShopPage() {
 function ProductCard({ product }) {
   const discount = product.compareAtPrice > product.price ? Math.round((1 - product.price / product.compareAtPrice) * 100) : 0;
   return <Link to={`/products/${product._id}`} className="group flex min-w-0 flex-col overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm transition hover:border-slate-400 hover:shadow-md">
-    <div className="relative aspect-[4/3] overflow-hidden bg-[#f7f8f8]">{discount > 0 && <span className="absolute left-0 top-3 z-10 bg-[#cc0c39] px-2.5 py-1 text-xs font-bold text-white">-{discount}%</span>}{product.images?.[0] ? <img src={product.images[0]} alt={product.name} loading="lazy" decoding="async" className="h-full w-full object-contain p-3 transition duration-300 group-hover:scale-[1.03]" /> : <div className="grid h-full place-items-center bg-gradient-to-br from-[#f8f4ec] to-[#eef1f1] text-5xl font-bold text-[#8091a1]">{product.name.slice(0, 1).toUpperCase()}</div>}</div>
+    <div className="relative aspect-[4/3] overflow-hidden bg-[#f7f8f8]">{discount > 0 && <span className="absolute left-0 top-3 z-10 bg-[#cc0c39] px-2.5 py-1 text-xs font-bold text-white">-{discount}%</span>}{product.images?.[0] ? <ProductImage src={product.images[0]} alt={product.name} className="h-full w-full object-contain p-3 transition duration-300 group-hover:scale-[1.03]" /> : <div className="grid h-full place-items-center bg-gradient-to-br from-[#f8f4ec] to-[#eef1f1] text-5xl font-bold text-[#8091a1]">{product.name.slice(0, 1).toUpperCase()}</div>}</div>
     <div className="flex flex-1 flex-col p-4"><p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-500">{product.brand || product.category?.name || 'Marketplace pick'}</p><h2 className="line-clamp-2 min-h-10 font-medium leading-5 text-[#0f1111] group-hover:text-[#b45309]">{product.name}</h2><div className="mt-2 flex items-center gap-1.5"><span aria-label={`${Number(product.ratingAverage || 0).toFixed(1)} out of 5 stars`} className="text-sm font-bold tracking-tight text-[#de7921]">★ {Number(product.ratingAverage || 0).toFixed(1)}</span><span className="text-xs text-slate-500">({product.ratingCount || 0})</span></div><div className="mt-3 flex flex-wrap items-baseline gap-2"><span className="text-xl font-bold tracking-tight text-[#0f1111]">{formatPrice(product.price)}</span>{product.compareAtPrice > product.price && <span className="text-xs text-slate-500">List: <span className="line-through">{formatPrice(product.compareAtPrice)}</span></span>}</div><p className={`mt-auto pt-3 text-xs font-medium ${product.stock > 0 ? 'text-emerald-700' : 'text-slate-500'}`}>{product.stock > 0 ? 'In stock · Free shipping' : 'Currently unavailable'}</p><span className="mt-3 inline-flex w-fit rounded-full bg-[#ffd814] px-4 py-1.5 text-xs font-semibold text-[#0f1111] transition group-hover:bg-[#f7ca00]">View product</span></div>
   </Link>;
 }

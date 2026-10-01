@@ -127,6 +127,16 @@ npm run dev
 
 The backend connects to MongoDB before it starts listening. Check the terminal output if startup stops at the database connection.
 
+### Optional: fill the storefront with showcase listings
+
+After configuring MongoDB, run this from the project root:
+
+```powershell
+npm run seed:showcase
+```
+
+This idempotently adds 20 fictional products, six categories, and a dedicated `Northstar Studio (Demo Seller)` account to the configured non-production database. The seller password is generated randomly and is not printed; the account exists to own the showcase listings. Product images are generated assets served locally from `frontend/public/showcase-products`, so the storefront does not depend on remote photo URLs. The seed command refuses to run when `NODE_ENV=production`.
+
 ### Optional: configure a local Stripe webhook
 
 Install and authenticate the Stripe CLI, then run:

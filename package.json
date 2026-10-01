@@ -8,7 +8,8 @@
     "test": "npm test --prefix backend",
     "test:unit": "npm run test:unit --prefix backend",
     "test:integration": "npm run test:integration --prefix backend",
-    "test:system": "npm run test:system --prefix backend"
+    "test:system": "npm run test:system --prefix backend",
+    "seed:showcase": "npm run seed:showcase --prefix backend"
   },
   "devDependencies": {
     "concurrently": "^9.0.0"
