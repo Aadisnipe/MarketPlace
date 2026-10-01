@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@layer base {
+  :root { color-scheme: light; font-synthesis: none; text-rendering: optimizeLegibility; }
+  html { scroll-behavior: smooth; }
+  body { @apply bg-slate-50 text-slate-900 antialiased; min-width: 320px; }
+  :focus-visible { @apply outline-2 outline-offset-2 outline-amber-600; }
+  button, a, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+  button { @apply cursor-pointer transition-colors duration-150; }
+  button:disabled { @apply cursor-not-allowed; }
+  input, select, textarea { @apply max-w-full; }
+  ::selection { @apply bg-amber-200 text-slate-950; }
+}
+
+@media (max-width: 640px) {
+  input, select, textarea { font-size: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
