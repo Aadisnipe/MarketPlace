@@ -74,7 +74,7 @@ Order checkout and cancellation use MongoDB transactions so stock and cart chang
 | Backend | Node.js, Express 4, Mongoose |
 | Authentication | bcryptjs password hashing, JWT in an httpOnly cookie, role and ownership middleware |
 | Payments | Stripe Checkout Sessions and signed webhooks |
-| Security | Helmet, exact-origin credentialed CORS, origin checks for cookie writes, request limits, Mongo operator sanitization, HTTP parameter-pollution protection, and rate limits |
+| Security | Helmet, credentialed CORS for any origin, origin checks for cookie writes, request limits, Mongo operator sanitization, HTTP parameter-pollution protection, and rate limits |
 | Tests | Jest and Supertest |
 
 ## Run locally

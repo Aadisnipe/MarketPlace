@@ -14,6 +14,16 @@ describe('Phase 12 input and origin protections', () => {
     expect(response.body.data.database).toBe('disconnected');
   });
 
+  test('allows CORS requests from any origin with credentials', async () => {
+    const response = await request(app)
+      .get('/api/health')
+      .set('Origin', 'https://another-app.example')
+      .expect(200);
+
+    expect(response.headers['access-control-allow-origin']).toBe('https://another-app.example');
+    expect(response.headers['access-control-allow-credentials']).toBe('true');
+  });
+
   test('rejects cookie-authenticated writes from an untrusted origin', async () => {
     const response = await request(app)
       .post('/api/auth/logout')

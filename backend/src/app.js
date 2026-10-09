@@ -20,7 +20,7 @@ if (env.trustProxy !== false) app.set('trust proxy', env.trustProxy);
 app.use(helmet());
 app.use(
   cors({
-    origin: env.clientOrigin, // exact origin, never '*' when credentials are on
+    origin: true,
     credentials: true,
   })
 );
